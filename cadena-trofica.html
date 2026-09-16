@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Guardianes de la Cadena Trófica · ODS 15</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest-dark:#173d2d;
+    --forest:#2d6a4f;
+    --forest-mid:#40916c;
+    --leaf:#74c69d;
+    --leaf-light:#b7e4c7;
+    --pale:#eefbf3;
+    --sun:#ffd166;
+    --sun-dark:#f4a300;
+    --sky:#cdeef7;
+    --wood:#a9714f;
+    --berry:#f16d63;
+    --berry-dark:#d84c42;
+    --ink:#1c2b22;
+    --card-shadow: 0 6px 0 rgba(23,61,45,0.18);
+    --radius: 20px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background: radial-gradient(circle at 15% 0%, #d7f6e3 0%, var(--pale) 45%, #dff4e4 100%);
+    color:var(--ink);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+  h1,h2,h3, .display{
+    font-family:'Baloo 2', sans-serif;
+    color:var(--forest-dark);
+    margin:0 0 8px 0;
+  }
+  .app{
+    max-width:920px;
+    margin:0 auto;
+    padding:14px 14px 60px;
+    position:relative;
+  }
+  /* ---------- topbar ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    background:#ffffffcc;
+    backdrop-filter: blur(6px);
+    border:3px solid var(--leaf);
+    border-radius:999px;
+    padding:8px 14px;
+    position:sticky;
+    top:10px;
+    z-index:50;
+    box-shadow:0 4px 14px rgba(23,61,45,0.12);
+  }
+  .brand{
+    display:flex;align-items:center;gap:8px;
+    font-family:'Baloo 2';font-weight:700;color:var(--forest-dark);
+    font-size:15px;
+    white-space:nowrap;
+  }
+  .brand .leafico{font-size:22px;}
+  .topbar-right{display:flex;align-items:center;gap:8px;}
+  .score-pill{
+    display:flex;align-items:center;gap:6px;
+    background:linear-gradient(180deg,#fff6da,var(--sun));
+    border:2px solid var(--sun-dark);
+    border-radius:999px;
+    padding:5px 12px;
+    font-weight:800;
+    font-family:'Baloo 2';
+    color:#7a4b00;
+    font-size:14px;
+  }
+  .icon-btn{
+    border:2px solid var(--forest-mid);
+    background:#fff;
+    color:var(--forest-dark);
+    border-radius:999px;
+    width:38px;height:38px;
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    font-size:17px;
+    transition:transform .15s ease, background .15s ease;
+  }
+  .icon-btn:hover{transform:translateY(-2px);background:var(--leaf-light);}
+  .lang-btn{
+    border:2px solid var(--forest-mid);
+    background:#fff;
+    border-radius:999px;
+    padding:6px 12px;
+    font-weight:800;
+    font-family:'Baloo 2';
+    font-size:13px;
+    cursor:pointer;
+    color:var(--forest-dark);
+    display:flex;align-items:center;gap:6px;
+    transition:transform .15s ease;
+  }
+  .lang-btn:hover{transform:translateY(-2px);}
+
+  /* ---------- progress dots ---------- */
+  .progress-row{
+    display:flex;justify-content:center;gap:6px;
+    margin:14px 0 6px;
+    flex-wrap:wrap;
+  }
+  .pdot{
+    width:11px;height:11px;border-radius:50%;
+    background:#cfe9db;
+    border:2px solid #a9d8be;
+    transition:all .25s ease;
+  }
+  .pdot.active{background:var(--forest-mid);border-color:var(--forest-dark);transform:scale(1.3);}
+  .pdot.done{background:var(--sun);border-color:var(--sun-dark);}
+
+  /* ---------- screens ---------- */
+  .screen{display:none;animation:fadein .35s ease;}
+  .screen.active{display:block;}
+  @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  .panel{
+    background:#ffffff;
+    border:3px solid var(--leaf-light);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    margin-top:16px;
+    box-shadow: var(--card-shadow);
+  }
+  .ods-badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--forest-dark);color:#fff;
+    font-family:'Baloo 2';font-weight:700;
+    padding:6px 14px;border-radius:999px;font-size:13px;
+    margin-bottom:10px;
+  }
+  .ods-badge .n{background:#fff;color:var(--forest-dark);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;}
+
+  .hero{
+    text-align:center;padding:10px 6px 4px;
+  }
+  .hero-forest{
+    font-size:52px;
+    line-height:1;
+    margin:6px 0 4px;
+    animation:sway 3s ease-in-out infinite;
+  }
+  @keyframes sway{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(2deg);}}
+  .subtitle{font-size:16px;color:var(--forest);font-weight:700;max-width:520px;margin:0 auto;}
+
+  .btn{
+    font-family:'Baloo 2';
+    font-weight:700;
+    font-size:16px;
+    border:none;
+    border-radius:16px;
+    padding:13px 26px;
+    cursor:pointer;
+    display:inline-flex;align-items:center;gap:8px;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{transform:translateY(2px);}
+  .btn-primary{
+    background:linear-gradient(180deg, var(--leaf), var(--forest-mid));
+    color:#fff;
+    box-shadow:0 5px 0 var(--forest-dark);
+  }
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-primary:active{box-shadow:0 2px 0 var(--forest-dark);}
+  .btn-secondary{
+    background:#fff;
+    color:var(--forest-dark);
+    border:2px solid var(--forest-mid);
+    box-shadow:0 4px 0 #bfe3cf;
+  }
+  .btn-row{display:flex;justify-content:center;gap:10px;margin-top:18px;flex-wrap:wrap;}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none;transform:none;}
+
+  /* ---------- mascot bubble ---------- */
+  .mascot-row{
+    display:flex;align-items:flex-start;gap:12px;
+    margin:8px 0 18px;
+  }
+  .mascot{
+    font-size:46px;flex:none;
+    filter:drop-shadow(0 4px 3px rgba(0,0,0,.15));
+    animation:bob 2.6s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+  .bubble{
+    background:var(--pale);
+    border:2px solid var(--leaf-light);
+    border-radius:16px;
+    padding:12px 14px;
+    font-weight:700;
+    color:var(--forest-dark);
+    position:relative;
+    font-size:15px;
+    flex:1;
+  }
+  .bubble:before{
+    content:"";position:absolute;left:-9px;top:16px;
+    border-width:8px 10px 8px 0;
+    border-style:solid;
+    border-color:transparent var(--leaf-light) transparent transparent;
+  }
+
+  /* ---------- concept blocks ---------- */
+  .chain-strip{
+    display:flex;align-items:center;justify-content:center;
+    gap:6px;flex-wrap:wrap;
+    margin:16px 0;
+    padding:14px 8px;
+    background:var(--sky);
+    border-radius:16px;
+  }
+  .chain-chip{
+    background:#fff;border:2px solid var(--forest-mid);
+    border-radius:14px;padding:8px 10px;text-align:center;
+    min-width:74px;
+  }
+  .chain-chip .em{font-size:28px;display:block;}
+  .chain-chip .lb{font-size:11px;font-weight:800;color:var(--forest-dark);display:block;margin-top:2px;}
+  .chain-chip .role{font-size:9.5px;color:var(--forest);font-weight:700;}
+  .arrow{font-size:20px;color:var(--forest-mid);font-weight:800;}
+
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;}
+  @media(max-width:600px){.info-grid{grid-template-columns:1fr;}}
+  .info-card{
+    background:var(--pale);border:2px dashed var(--leaf);
+    border-radius:14px;padding:12px;font-size:13.5px;font-weight:700;color:var(--forest-dark);
+  }
+  .info-card .em{font-size:22px;margin-right:6px;}
+
+  details.teacher-note{
+    margin-top:16px;background:#fff8e7;border:2px solid var(--sun-dark);
+    border-radius:14px;padding:10px 14px;font-size:13px;color:#6b4c00;font-weight:600;
+  }
+  details.teacher-note summary{cursor:pointer;font-family:'Baloo 2';font-weight:700;color:#7a4b00;}
+
+  /* ---------- drag & drop ---------- */
+  .tray{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;
+    min-height:96px;
+    padding:10px;
+    background:#f2fbf6;border:2px dashed var(--leaf);border-radius:16px;
+    margin:14px 0;
+  }
+  .drag-item{
+    touch-action:none;
+    user-select:none;
+    background:#fff;
+    border:3px solid var(--forest-mid);
+    border-radius:14px;
+    width:78px;height:88px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    cursor:grab;
+    box-shadow:0 4px 0 #bfe3cf;
+    transition:box-shadow .1s ease;
+    position:relative;
+    z-index:5;
+  }
+  .drag-item .em{font-size:30px;}
+  .drag-item .lb{font-size:10.5px;font-weight:800;color:var(--forest-dark);margin-top:2px;text-align:center;}
+  .drag-item.dragging{
+    opacity:.9;box-shadow:0 10px 16px rgba(0,0,0,.2);cursor:grabbing;z-index:999;position:fixed;
+  }
+  .drag-item.placed{opacity:0;pointer-events:none;position:absolute;}
+  .drag-item.locked{cursor:default;box-shadow:none;border-color:var(--forest-mid);}
+  .drag-item.wrong-shake{animation:shake .4s ease;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+
+  .slots-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0;}
+  .slot{
+    width:78px;height:88px;border-radius:14px;
+    border:3px dashed #b7d9c4;
+    background:#fbfffc;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    position:relative;
+  }
+  .slot .num{position:absolute;top:3px;left:6px;font-size:10px;font-weight:800;color:#9db8a9;}
+  .slot.filled{border-style:solid;border-color:var(--forest-mid);background:var(--leaf-light);}
+  .slot.filled.correct{border-color:var(--forest);background:#d5f2df;}
+  .slot.over{border-color:var(--sun-dark);background:#fff6da;}
+  .slot .em{font-size:30px;}
+  .slot .lb{font-size:10px;font-weight:800;color:var(--forest-dark);margin-top:2px;text-align:center;}
+  .slot.fixed{background:var(--sun);border:3px solid var(--sun-dark);}
+  .slot.fixed .lb{color:#7a4b00;}
+
+  .baskets-row{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:16px 0;}
+  .basket{
+    width:150px;min-height:120px;
+    border-radius:16px;border:3px solid var(--forest-mid);
+    background:#f2fbf6;padding:8px;text-align:center;
+  }
+  .basket .em{font-size:30px;}
+  .basket .lb{font-family:'Baloo 2';font-weight:700;font-size:13px;color:var(--forest-dark);}
+  .basket .slotarea{min-height:64px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:flex-start;margin-top:6px;}
+  .basket.over{background:#fff6da;border-color:var(--sun-dark);}
+  .basket-chip{background:#fff;border:2px solid var(--forest-mid);border-radius:10px;padding:4px 6px;font-size:20px;}
+
+  /* ---------- rule of three ---------- */
+  .prop-table{
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    margin:16px auto;background:var(--pale);border-radius:16px;padding:16px;max-width:420px;
+  }
+  .prop-line{display:flex;align-items:center;gap:10px;font-family:'Baloo 2';font-size:20px;color:var(--forest-dark);}
+  .prop-box{
+    min-width:64px;min-height:48px;background:#fff;border:3px solid var(--forest-mid);
+    border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;padding:4px 8px;
+  }
+  .prop-box.blank{border-style:dashed;border-color:var(--sun-dark);background:#fffdf3;color:#c99400;}
+  .prop-box.blank.over{background:#fff1c2;}
+  .prop-unit{font-size:11px;font-weight:700;color:var(--forest);display:block;}
+  .prop-sep{font-size:22px;color:var(--wood);}
+
+  .tiles-row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:16px 0;}
+  .num-tile{
+    touch-action:none;user-select:none;
+    width:64px;height:64px;border-radius:14px;
+    background:#fff;border:3px solid var(--forest-mid);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Baloo 2';font-weight:800;font-size:22px;color:var(--forest-dark);
+    cursor:grab;box-shadow:0 4px 0 #bfe3cf;
+  }
+  .num-tile.dragging{position:fixed;z-index:999;cursor:grabbing;box-shadow:0 10px 16px rgba(0,0,0,.25);}
+  .num-tile.locked{background:var(--leaf-light);cursor:default;}
+  .num-tile.hidden-tile{visibility:hidden;}
+
+  .step-hint{
+    background:#fff;border:2px solid var(--leaf-light);border-radius:12px;padding:10px 14px;
+    font-size:13.5px;font-weight:700;color:var(--forest);margin:10px 0;text-align:center;
+  }
+
+  /* ---------- feedback ---------- */
+  .feedback-box{
+    text-align:center;padding:20px 10px;
+  }
+  .feedback-emoji{font-size:60px;animation:pop .5s ease;}
+  @keyframes pop{0%{transform:scale(.3);}70%{transform:scale(1.15);}100%{transform:scale(1);}}
+  .feedback-score{font-family:'Baloo 2';font-size:20px;color:var(--forest-dark);margin:8px 0;}
+  .badge-earned{
+    display:inline-flex;align-items:center;gap:8px;
+    background:linear-gradient(180deg,#fff6da,var(--sun));
+    border:2px solid var(--sun-dark);
+    border-radius:999px;padding:8px 16px;margin-top:10px;
+    font-family:'Baloo 2';font-weight:800;color:#7a4b00;
+    animation:pop .5s ease;
+  }
+
+  /* ---------- toast ---------- */
+  #toastWrap{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:2000;display:flex;flex-direction:column;gap:8px;align-items:center;}
+  .toast{
+    background:var(--forest-dark);color:#fff;font-weight:800;font-family:'Baloo 2';
+    padding:10px 18px;border-radius:999px;box-shadow:0 6px 14px rgba(0,0,0,.25);
+    animation:toastin .25s ease, toastout .4s ease 1.6s forwards;
+    font-size:14px;
+  }
+  @keyframes toastin{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes toastout{to{opacity:0;transform:translateY(-14px);}}
+
+  .confetti{position:fixed;top:-20px;font-size:22px;z-index:1500;animation:fall linear forwards;}
+  @keyframes fall{to{transform:translateY(105vh) rotate(360deg);opacity:.2;}}
+
+  footer.small{text-align:center;font-size:12px;color:var(--forest);opacity:.8;margin-top:26px;}
+</style>
+</head>
+<body>
+
+<div id="toastWrap"></div>
+
+<div class="app">
+  <div class="topbar">
+    <div class="brand"><span class="leafico">🌳</span><span data-es="Guardianes de la Cadena Trófica" data-en="Guardians of the Food Chain">Guardianes de la Cadena Trófica</span></div>
+    <div class="topbar-right">
+      <div class="score-pill">⭐ <span id="scoreValue">0</span></div>
+      <button class="icon-btn" id="muteBtn" title="Sonido">🔊</button>
+      <button class="lang-btn" id="langBtn">🌐 <span id="langBtnLabel">English</span></button>
+    </div>
+  </div>
+
+  <div class="progress-row" id="progressRow"></div>
+
+  <!-- ================= INTRO ================= -->
+  <section class="screen active" id="screen-intro">
+    <div class="panel">
+      <div class="ods-badge"><span class="n">15</span><span data-es="ODS 15 · Vida de ecosistemas terrestres" data-en="SDG 15 · Life on Land">ODS 15 · Vida de ecosistemas terrestres</span></div>
+      <div class="hero">
+        <div class="hero-forest">🌲🦉🌳🐿️🌿</div>
+        <h1 data-es="¡Bienvenido, Guardián de la Tierra!" data-en="Welcome, Guardian of the Earth!">¡Bienvenido, Guardián de la Tierra!</h1>
+        <p class="subtitle" data-es="Vas a descubrir cómo viven conectados los seres de un bosque y usarás las matemáticas para cuidarlos mejor." data-en="You'll discover how living things in a forest are connected, and use math to help take care of them.">Vas a descubrir cómo viven conectados los seres de un bosque y usarás las matemáticas para cuidarlos mejor.</p>
+      </div>
+      <div class="mascot-row">
+        <div class="mascot">🦉</div>
+        <div class="bubble" data-es="¡Hola! Soy Sabio, el búho guardabosques. Te acompañaré en esta aventura para aprender sobre la cadena trófica terrestre. ¿Listo para comenzar?" data-en="Hi! I'm Sabio, the forest owl. I'll guide you through this adventure to learn about the terrestrial food chain. Ready to start?">¡Hola! Soy Sabio, el búho guardabosques. Te acompañaré en esta aventura para aprender sobre la cadena trófica terrestre. ¿Listo para comenzar?</div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnStart">🚀 <span data-es="Comenzar aventura" data-en="Start adventure">Comenzar aventura</span></button>
+      </div>
+      <details class="teacher-note">
+        <summary data-es="📘 Ficha para el docente" data-en="📘 Teacher notes">📘 Ficha para el docente</summary>
+        <p data-es="Grado: Cuarto de primaria (8-10 años). Área: Ciencias Naturales. DBA 6: explica la dinámica de un ecosistema teniendo en cuenta las necesidades de energía y nutrientes de los organismos (productores, consumidores y descomponedores) y las relaciones alimentarias que establecen (cadenas y redes alimentarias). Se articula con Matemáticas mediante la regla de tres simple y con el ODS 15, promoviendo la protección de la vida terrestre." data-en="Grade: 4th grade (ages 8-10). Subject: Natural Sciences. Learning target: explain ecosystem dynamics considering the energy and nutrient needs of organisms (producers, consumers, decomposers) and the feeding relationships among them (food chains and webs). Connected to Math through simple rule of three, and to SDG 15, promoting the protection of terrestrial life.">Grado: Cuarto de primaria (8-10 años). Área: Ciencias Naturales. DBA 6: explica la dinámica de un ecosistema teniendo en cuenta las necesidades de energía y nutrientes de los organismos (productores, consumidores y descomponedores) y las relaciones alimentarias que establecen (cadenas y redes alimentarias). Se articula con Matemáticas mediante la regla de tres simple y con el ODS 15, promoviendo la protección de la vida terrestre.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================= DIAGNOSTIC ================= -->
+  <section class="screen" id="screen-diagnostic">
+    <div class="panel">
+      <h2 data-es="🔎 ¿Qué sabes ya?" data-en="🔎 What do you already know?">🔎 ¿Qué sabes ya?</h2>
+      <div class="mascot-row">
+        <div class="mascot">🦉</div>
+        <div class="bubble" data-es="Antes de empezar, arrastra cada ser vivo a la canasta donde creas que pertenece. ¡No hay respuestas incorrectas todavía, solo queremos saber qué piensas!" data-en="Before we start, drag each living thing to the basket where you think it belongs. There are no wrong answers yet, we just want to know what you think!">Antes de empezar, arrastra cada ser vivo a la canasta donde creas que pertenece. ¡No hay respuestas incorrectas todavía, solo queremos saber qué piensas!</div>
+      </div>
+      <div class="tray" id="diagTray"></div>
+      <div class="baskets-row" id="diagBaskets"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnDiagCheck" disabled>✅ <span data-es="Ver resultado" data-en="See result">Ver resultado</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONCEPT 1 ================= -->
+  <section class="screen" id="screen-concept1">
+    <div class="panel">
+      <div class="ods-badge"><span class="n">15</span><span data-es="Concepto clave" data-en="Key concept">Concepto clave</span></div>
+      <h2 data-es="🌿 La cadena trófica terrestre" data-en="🌿 The terrestrial food chain">🌿 La cadena trófica terrestre</h2>
+      <div class="mascot-row">
+        <div class="mascot">🦉</div>
+        <div class="bubble" data-es="En un ecosistema terrestre, la energía del Sol pasa de un ser vivo a otro formando una cadena. ¡Mira cómo viaja la energía!" data-en="In a terrestrial ecosystem, energy from the Sun passes from one living thing to another, forming a chain. Watch how the energy travels!">En un ecosistema terrestre, la energía del Sol pasa de un ser vivo a otro formando una cadena. ¡Mira cómo viaja la energía!</div>
+      </div>
+      <div class="chain-strip" id="conceptChain"></div>
+      <div class="info-grid">
+        <div class="info-card"><span class="em">🌱</span><span data-es="Productores: fabrican su alimento usando la luz del sol (plantas, pasto, árboles)." data-en="Producers: make their own food using sunlight (plants, grass, trees).">Productores: fabrican su alimento usando la luz del sol (plantas, pasto, árboles).</span></div>
+        <div class="info-card"><span class="em">🦗🐸🐍</span><span data-es="Consumidores: se alimentan de otros seres vivos (herbívoros, carnívoros y omnívoros)." data-en="Consumers: feed on other living things (herbivores, carnivores and omnivores).">Consumidores: se alimentan de otros seres vivos (herbívoros, carnívoros y omnívoros).</span></div>
+        <div class="info-card"><span class="em">🍄</span><span data-es="Descomponedores: transforman los restos de otros seres vivos en nutrientes para el suelo." data-en="Decomposers: transform the remains of other living things into nutrients for the soil.">Descomponedores: transforman los restos de otros seres vivos en nutrientes para el suelo.</span></div>
+        <div class="info-card"><span class="em">🌎</span><span data-es="Cuidar cada eslabón protege la vida terrestre: ¡esa es la meta del ODS 15!" data-en="Protecting each link protects life on land: that's the goal of SDG 15!">Cuidar cada eslabón protege la vida terrestre: ¡esa es la meta del ODS 15!</span></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnToGame1">🎮 <span data-es="Jugar: Ordena la cadena" data-en="Play: Order the chain">Jugar: Ordena la cadena</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GAME 1 ================= -->
+  <section class="screen" id="screen-game1">
+    <div class="panel">
+      <h2 data-es="🧩 Arma la cadena trófica" data-en="🧩 Build the food chain">🧩 Arma la cadena trófica</h2>
+      <p class="step-hint" data-es="Arrastra cada ser vivo a su lugar correcto en la cadena, empezando por el Sol." data-en="Drag each living thing to its correct place in the chain, starting from the Sun.">Arrastra cada ser vivo a su lugar correcto en la cadena, empezando por el Sol.</p>
+      <div class="slots-row" id="game1Slots"></div>
+      <div class="tray" id="game1Tray"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnToFeedback1" disabled>➡️ <span data-es="Ver mi resultado" data-en="See my result">Ver mi resultado</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEEDBACK 1 ================= -->
+  <section class="screen" id="screen-feedback1">
+    <div class="panel">
+      <div class="feedback-box" id="feedback1Box"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnToConcept2">➡️ <span data-es="Siguiente reto" data-en="Next challenge">Siguiente reto</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CONCEPT 2 ================= -->
+  <section class="screen" id="screen-concept2">
+    <div class="panel">
+      <div class="ods-badge"><span class="n">➗</span><span data-es="Matemáticas + Ciencias" data-en="Math + Science">Matemáticas + Ciencias</span></div>
+      <h2 data-es="📐 La regla de tres simple en la cadena" data-en="📐 Simple rule of three in the chain">📐 La regla de tres simple en la cadena</h2>
+      <div class="mascot-row">
+        <div class="mascot">🦉</div>
+        <div class="bubble" data-es="No toda la energía pasa de un eslabón a otro. Podemos calcular cuánta necesita cada ser vivo usando la regla de tres simple: si conocemos 3 datos, ¡podemos hallar el cuarto!" data-en="Not all the energy passes from one link to the next. We can calculate how much each living thing needs using the simple rule of three: if we know 3 values, we can find the fourth!">No toda la energía pasa de un eslabón a otro. Podemos calcular cuánta necesita cada ser vivo usando la regla de tres simple: si conocemos 3 datos, ¡podemos hallar el cuarto!</div>
+      </div>
+      <div class="prop-table">
+        <div class="prop-line"><div class="prop-box">100<span class="prop-unit">kg 🌱</span></div><span class="prop-sep">—</span><div class="prop-box">10<span class="prop-unit">kg 🦗</span></div></div>
+        <div class="prop-line"><div class="prop-box">300<span class="prop-unit">kg 🌱</span></div><span class="prop-sep">—</span><div class="prop-box blank">?<span class="prop-unit">kg 🦗</span></div></div>
+      </div>
+      <div class="info-card" style="max-width:520px;margin:0 auto;">
+        <span data-es="Paso 1: multiplica en cruz los números que sí conoces (300 × 10 = 3000). Paso 2: divide ese resultado entre el número que sobra (3000 ÷ 100 = 30). ¡Se necesitan 30 kg de saltamontes!" data-en="Step 1: cross-multiply the numbers you know (300 × 10 = 3000). Step 2: divide that result by the remaining number (3000 ÷ 100 = 30). You need 30 kg of grasshoppers!">Paso 1: multiplica en cruz los números que sí conoces (300 × 10 = 3000). Paso 2: divide ese resultado entre el número que sobra (3000 ÷ 100 = 30). ¡Se necesitan 30 kg de saltamontes!</span>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnToGame2">🎮 <span data-es="Jugar: Calcula la cadena" data-en="Play: Calculate the chain">Jugar: Calcula la cadena</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GAME 2 ================= -->
+  <section class="screen" id="screen-game2">
+    <div class="panel">
+      <h2 data-es="🧮 Resuelve con la regla de tres" data-en="🧮 Solve with the rule of three">🧮 Resuelve con la regla de tres</h2>
+      <p class="step-hint" id="game2ProgressText"></p>
+      <div id="game2ProblemArea"></div>
+    </div>
+  </section>
+
+  <!-- ================= FEEDBACK 2 ================= -->
+  <section class="screen" id="screen-feedback2">
+    <div class="panel">
+      <div class="feedback-box" id="feedback2Box"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="btnToFinal">🏁 <span data-es="Terminar aventura" data-en="Finish adventure">Terminar aventura</span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINAL ================= -->
+  <section class="screen" id="screen-final">
+    <div class="panel">
+      <div class="feedback-box">
+        <div class="feedback-emoji">🏆</div>
+        <h2 data-es="¡Eres un Guardián de la Vida Terrestre!" data-en="You are a Guardian of Life on Land!">¡Eres un Guardián de la Vida Terrestre!</h2>
+        <p class="feedback-score" data-es="Puntaje final:" data-en="Final score:"> </p>
+        <div class="feedback-score">⭐ <span id="finalScore">0</span></div>
+        <div id="finalBadges" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px;"></div>
+        <div class="info-card" style="max-width:480px;margin:18px auto 0;">
+          <span data-es="Recuerda: cada planta, animal y descomponedor cumple un papel importante. Cuidar la cadena trófica es cuidar la vida en la Tierra. 🌎💚" data-en="Remember: every plant, animal and decomposer plays an important role. Taking care of the food chain means taking care of life on Earth. 🌎💚">Recuerda: cada planta, animal y descomponedor cumple un papel importante. Cuidar la cadena trófica es cuidar la vida en la Tierra. 🌎💚</span>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="btnReplay">🔄 <span data-es="Jugar de nuevo" data-en="Play again">Jugar de nuevo</span></button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="small" data-es="Diseño instruccional · ODS 15 · Ciencias Naturales grado 4° · DBA 6" data-en="Instructional design · SDG 15 · Natural Sciences grade 4 · DBA 6">Diseño instruccional · ODS 15 · Ciencias Naturales grado 4° · DBA 6</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ============== STATE ============== */
+  var currentLang = 'es';
+  var score = 0;
+  var soundOn = true;
+  var badges = []; // {emoji, es, en}
+  var audioCtx = null;
+
+  var screens = ['screen-intro','screen-diagnostic','screen-concept1','screen-game1','screen-feedback1','screen-concept2','screen-game2','screen-feedback2','screen-final'];
+  var screenIcons = ['🏠','🔎','🌿','🧩','📣','📐','🧮','📣','🏆'];
+
+  /* ============== HELPERS ============== */
+  function $(id){ return document.getElementById(id); }
+  function qsa(sel, root){ return Array.prototype.slice.call((root||document).querySelectorAll(sel)); }
+
+  function applyLang(){
+    qsa('[data-es]').forEach(function(el){
+      var val = el.getAttribute('data-' + currentLang);
+      if(val !== null) el.textContent = val;
+    });
+    $('langBtnLabel').textContent = currentLang === 'es' ? 'English' : 'Español';
+    document.documentElement.lang = currentLang;
+  }
+
+  function t(es, en){ return currentLang === 'es' ? es : en; }
+
+  function addScore(n){
+    score += n;
+    $('scoreValue').textContent = score;
+    var pill = document.querySelector('.score-pill');
+    pill.style.transform = 'scale(1.15)';
+    setTimeout(function(){ pill.style.transform='scale(1)'; }, 180);
+  }
+
+  function toast(msg){
+    var el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    $('toastWrap').appendChild(el);
+    setTimeout(function(){ el.remove(); }, 2000);
+  }
+
+  function confettiBurst(){
+    var emojis = ['🌿','⭐','🍃','🌟','🦋'];
+    for(var i=0;i<18;i++){
+      (function(){
+        var s = document.createElement('div');
+        s.className = 'confetti';
+        s.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        s.style.left = (Math.random()*100)+'vw';
+        s.style.animationDuration = (2 + Math.random()*1.5)+'s';
+        document.body.appendChild(s);
+        setTimeout(function(){ s.remove(); }, 3600);
+      })();
+    }
+  }
+
+  function ensureAudio(){
+    if(!audioCtx){
+      try{ audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){}
+    }
+  }
+  function tone(freq, dur, delay, type){
+    if(!soundOn || !audioCtx) return;
+    var t0 = audioCtx.currentTime + (delay||0);
+    var osc = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, t0);
+    gain.gain.setValueAtTime(0.0001, t0);
+    gain.gain.exponentialRampToValueAtTime(0.14, t0+0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(t0); osc.stop(t0+dur+0.02);
+  }
+  function playCorrect(){ tone(660,0.14,0); tone(880,0.18,0.1); }
+  function playWrong(){ tone(180,0.22,0,'sawtooth'); }
+  function playClick(){ tone(500,0.08,0); }
+  function playReward(){ tone(523,0.13,0); tone(659,0.13,0.13); tone(784,0.22,0.26); }
+
+  document.addEventListener('pointerdown', ensureAudio, {once:true});
+
+  /* ============== SCREEN NAV ============== */
+  function buildProgress(){
+    var row = $('progressRow'); row.innerHTML = '';
+    screens.forEach(function(id, i){
+      var d = document.createElement('div');
+      d.className = 'pdot';
+      d.dataset.idx = i;
+      row.appendChild(d);
+    });
+  }
+  function goTo(id){
+    screens.forEach(function(sid){ $(sid).classList.toggle('active', sid===id); });
+    var idx = screens.indexOf(id);
+    qsa('.pdot').forEach(function(d,i){
+      d.classList.toggle('active', i===idx);
+      d.classList.toggle('done', i<idx);
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  /* ============== GENERIC DRAG ENGINE ============== */
+  // dragOptions: { onDrop(el, zoneEl) -> boolean handled, zoneSelector }
+  function makeDraggable(el, zoneSelector, onDrop){
+    var startX, startY, origParent, origNext, offsetX, offsetY, w, h;
+    el.style.touchAction = 'none';
+    el.addEventListener('pointerdown', function(ev){
+      if(el.classList.contains('locked')) return;
+      ev.preventDefault();
+      var rect = el.getBoundingClientRect();
+      w = rect.width; h = rect.height;
+      offsetX = ev.clientX - rect.left;
+      offsetY = ev.clientY - rect.top;
+      origParent = el.parentNode;
+      origNext = el.nextSibling;
+      document.body.appendChild(el);
+      el.style.width = w+'px'; el.style.height = h+'px';
+      el.style.left = (ev.clientX-offsetX)+'px';
+      el.style.top = (ev.clientY-offsetY)+'px';
+      el.classList.add('dragging');
+      el.setPointerCapture(ev.pointerId);
+
+      function move(ev2){
+        el.style.left = (ev2.clientX-offsetX)+'px';
+        el.style.top = (ev2.clientY-offsetY)+'px';
+        qsa(zoneSelector).forEach(function(z){ z.classList.remove('over'); });
+        var under = document.elementFromPoint(ev2.clientX, ev2.clientY);
+        var zone = under ? under.closest(zoneSelector) : null;
+        if(zone) zone.classList.add('over');
+      }
+      function up(ev2){
+        el.releasePointerCapture(ev2.pointerId);
+        document.removeEventListener('pointermove', move);
+        document.removeEventListener('pointerup', up);
+        el.classList.remove('dragging');
+        qsa(zoneSelector).forEach(function(z){ z.classList.remove('over'); });
+        var under = document.elementFromPoint(ev2.clientX, ev2.clientY);
+        var zone = under ? under.closest(zoneSelector) : null;
+        el.style.position=''; el.style.left=''; el.style.top=''; el.style.width=''; el.style.height='';
+
+        var handled = false;
+        if(zone){ handled = onDrop(el, zone); }
+        if(!handled){
+          if(origNext) origParent.insertBefore(el, origNext); else origParent.appendChild(el);
+        }
+      }
+      document.addEventListener('pointermove', move);
+      document.addEventListener('pointerup', up);
+    });
+  }
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for(var i=a.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var tmp=a[i]; a[i]=a[j]; a[j]=tmp;
+    }
+    return a;
+  }
+
+  /* ============== DIAGNOSTIC ============== */
+  var diagItems = [
+    {id:'pasto', emoji:'🌾', es:'Pasto', en:'Grass', group:'productor'},
+    {id:'arbol', emoji:'🌳', es:'Árbol', en:'Tree', group:'productor'},
+    {id:'conejo', emoji:'🐇', es:'Conejo', en:'Rabbit', group:'consumidor'},
+    {id:'zorro', emoji:'🦊', es:'Zorro', en:'Fox', group:'consumidor'},
+    {id:'lombriz', emoji:'🪱', es:'Lombriz', en:'Earthworm', group:'descomponedor'}
+  ];
+  var diagBasketsData = [
+    {id:'productor', emoji:'🌿', es:'Productor', en:'Producer'},
+    {id:'consumidor', emoji:'🐾', es:'Consumidor', en:'Consumer'},
+    {id:'descomponedor', emoji:'♻️', es:'Descomponedor', en:'Decomposer'}
+  ];
+  var diagAnswers = {}; // itemId -> chosen basket
+
+  function buildDiagnostic(){
+    var tray = $('diagTray'); tray.innerHTML = '';
+    diagItems.forEach(function(item){
+      var el = document.createElement('div');
+      el.className = 'drag-item';
+      el.dataset.id = item.id;
+      el.innerHTML = '<span class="em">'+item.emoji+'</span><span class="lb" data-es="'+item.es+'" data-en="'+item.en+'">'+item.es+'</span>';
+      tray.appendChild(el);
+      makeDraggable(el, '.basket', function(dragEl, zone){
+        var basketId = zone.dataset.basket;
+        var area = zone.querySelector('.slotarea');
+        var chip = document.createElement('div');
+        chip.className = 'basket-chip';
+        chip.textContent = item.emoji;
+        area.appendChild(chip);
+        dragEl.remove();
+        diagAnswers[item.id] = basketId;
+        playClick();
+        toast(t('¡Anotado! 📝','Noted! 📝'));
+        checkDiagComplete();
+        return true;
+      });
+    });
+
+    var baskets = $('diagBaskets'); baskets.innerHTML = '';
+    diagBasketsData.forEach(function(b){
+      var el = document.createElement('div');
+      el.className = 'basket dropzone';
+      el.dataset.basket = b.id;
+      el.innerHTML = '<span class="em">'+b.emoji+'</span><div class="lb" data-es="'+b.es+'" data-en="'+b.en+'">'+b.es+'</div><div class="slotarea"></div>';
+      baskets.appendChild(el);
+    });
+    applyLang();
+  }
+  function checkDiagComplete(){
+    if(Object.keys(diagAnswers).length === diagItems.length){
+      $('btnDiagCheck').disabled = false;
+    }
+  }
+  $('btnDiagCheck').addEventListener('click', function(){
+    playReward();
+    var correct = 0;
+    diagItems.forEach(function(item){ if(diagAnswers[item.id] === item.group) correct++; });
+    addScore(5);
+    badges.push({emoji:'🔎', es:'Explorador Curioso', en:'Curious Explorer'});
+    toast(t('+5 puntos por participar','+5 points for taking part'));
+    goTo('screen-concept1');
+    var msg = correct >= 4
+      ? t('¡Wow! Ya sabías bastante sobre los seres vivos. Vamos a reforzarlo.', 'Wow! You already knew a lot about living things. Now we will reinforce it.')
+      : t('¡Buen intento! Ahora vamos a aprenderlo juntos paso a paso.', 'Good try! Now we will learn it together step by step.');
+    setTimeout(function(){ toast(msg); }, 400);
+  });
+
+  /* ============== CONCEPT 1 (chain strip) ============== */
+  var chainItems = [
+    {id:'sol', emoji:'☀️', es:'Sol', en:'Sun', role_es:'Energía', role_en:'Energy'},
+    {id:'pasto', emoji:'🌱', es:'Pasto', en:'Grass', role_es:'Productor', role_en:'Producer'},
+    {id:'saltamontes', emoji:'🦗', es:'Saltamontes', en:'Grasshopper', role_es:'Consumidor 1°', role_en:'Consumer 1'},
+    {id:'rana', emoji:'🐸', es:'Rana', en:'Frog', role_es:'Consumidor 2°', role_en:'Consumer 2'},
+    {id:'culebra', emoji:'🐍', es:'Culebra', en:'Snake', role_es:'Consumidor 3°', role_en:'Consumer 3'},
+    {id:'hongo', emoji:'🍄', es:'Hongo', en:'Mushroom', role_es:'Descomponedor', role_en:'Decomposer'}
+  ];
+  function buildConceptChain(){
+    var wrap = $('conceptChain'); wrap.innerHTML='';
+    chainItems.forEach(function(item, i){
+      var chip = document.createElement('div');
+      chip.className = 'chain-chip';
+      chip.innerHTML = '<span class="em">'+item.emoji+'</span><span class="lb" data-es="'+item.es+'" data-en="'+item.en+'">'+item.es+'</span><span class="role" data-es="'+item.role_es+'" data-en="'+item.role_en+'">'+item.role_es+'</span>';
+      wrap.appendChild(chip);
+      if(i < chainItems.length-1){
+        var ar = document.createElement('div');
+        ar.className = 'arrow';
+        ar.textContent = '➜';
+        wrap.appendChild(ar);
+      }
+    });
+    applyLang();
+  }
+
+  /* ============== GAME 1 (order the chain) ============== */
+  var game1Correct = 0;
+  var game1Total = chainItems.length - 1; // excluding sun (fixed)
+
+  function buildGame1(){
+    game1Correct = 0;
+    $('btnToFeedback1').disabled = true;
+    var slotsRow = $('game1Slots'); slotsRow.innerHTML='';
+    chainItems.forEach(function(item, i){
+      var slot = document.createElement('div');
+      slot.className = 'slot dropzone';
+      slot.dataset.expect = item.id;
+      slot.innerHTML = '<span class="num">'+(i+1)+'</span>';
+      if(i === 0){
+        slot.classList.add('fixed','filled','correct');
+        slot.innerHTML += '<span class="em">'+item.emoji+'</span><span class="lb" data-es="'+item.es+'" data-en="'+item.en+'">'+item.es+'</span>';
+      }
+      slotsRow.appendChild(slot);
+    });
+
+    var tray = $('game1Tray'); tray.innerHTML='';
+    var pool = shuffle(chainItems.slice(1));
+    pool.forEach(function(item){
+      var el = document.createElement('div');
+      el.className = 'drag-item';
+      el.dataset.id = item.id;
+      el.innerHTML = '<span class="em">'+item.emoji+'</span><span class="lb" data-es="'+item.es+'" data-en="'+item.en+'">'+item.es+'</span>';
+      tray.appendChild(el);
+      makeDraggable(el, '#game1Slots .slot', function(dragEl, zone){
+        if(zone.classList.contains('filled')) return false;
+        if(zone.dataset.expect === item.id){
+          zone.classList.add('filled','correct');
+          zone.innerHTML = '<span class="num">'+(Array.prototype.indexOf.call(slotsRow.children, zone)+1)+'</span><span class="em">'+item.emoji+'</span><span class="lb" data-es="'+item.es+'" data-en="'+item.en+'">'+item.es+'</span>';
+          dragEl.remove();
+          playCorrect();
+          addScore(10);
+          toast(t('¡Correcto! +10','Correct! +10'));
+          game1Correct++;
+          applyLang();
+          if(game1Correct >= game1Total){
+            $('btnToFeedback1').disabled = false;
+            confettiBurst();
+            playReward();
+          }
+          return true;
+        } else {
+          dragEl.classList.add('wrong-shake');
+          playWrong();
+          toast(t('Ese no va ahí, ¡inténtalo de nuevo!','Not quite, try again!'));
+          setTimeout(function(){ dragEl.classList.remove('wrong-shake'); }, 400);
+          return false;
+        }
+      });
+    });
+    applyLang();
+  }
+
+  function buildFeedback1(){
+    var box = $('feedback1Box');
+    var pct = game1Correct / game1Total;
+    var emoji = pct >= 0.99 ? '🌟' : pct >= 0.6 ? '🙂' : '🌱';
+    var msgEs, msgEn;
+    if(pct >= 0.99){ msgEs='¡Excelente trabajo! Ordenaste toda la cadena trófica sin ayuda.'; msgEn='Excellent work! You ordered the whole food chain on your own.'; }
+    else { msgEs='¡Muy bien hecho! Completaste la cadena. Sigue practicando para dominarla aún más.'; msgEn='Well done! You completed the chain. Keep practicing to master it even more.'; }
+    box.innerHTML =
+      '<div class="feedback-emoji">'+emoji+'</div>'+
+      '<h2 data-es="'+msgEs+'" data-en="'+msgEn+'">'+msgEs+'</h2>'+
+      '<div class="feedback-score" data-es="Cadena completada correctamente" data-en="Chain completed correctly">Cadena completada correctamente</div>'+
+      '<div class="badge-earned">🏅 <span data-es="Insignia: Guardián de la Cadena" data-en="Badge: Chain Guardian">Insignia: Guardián de la Cadena</span></div>';
+    badges.push({emoji:'🏅', es:'Guardián de la Cadena', en:'Chain Guardian'});
+    applyLang();
+  }
+
+  /* ============== GAME 2 (rule of three) ============== */
+  var g2Problems = [
+    {a:100, b:10, c:200, ans:20, unitA:'🌱', unitB:'🦗', tiles:[15,20,25,30]},
+    {a:10, b:2, c:50, ans:10, unitA:'🦗', unitB:'🐸', tiles:[5,8,10,12]},
+    {a:4, b:1, c:12, ans:3, unitA:'🐸', unitB:'🐍', tiles:[2,3,4,6]}
+  ];
+  var g2Index = 0;
+  var g2Correct = 0;
+
+  function buildGame2(){
+    g2Index = 0; g2Correct = 0;
+    renderG2Problem();
+  }
+
+  function renderG2Problem(){
+    var area = $('game2ProblemArea');
+    $('game2ProgressText').textContent = t('Problema '+(g2Index+1)+' de '+g2Problems.length, 'Problem '+(g2Index+1)+' of '+g2Problems.length);
+    var p = g2Problems[g2Index];
+    var html = '';
+    html += '<div class="prop-table">';
+    html += '<div class="prop-line"><div class="prop-box">'+p.a+'<span class="prop-unit">'+p.unitA+'</span></div><span class="prop-sep">—</span><div class="prop-box">'+p.b+'<span class="prop-unit">'+p.unitB+'</span></div></div>';
+    html += '<div class="prop-line"><div class="prop-box">'+p.c+'<span class="prop-unit">'+p.unitA+'</span></div><span class="prop-sep">—</span><div class="prop-box blank dropzone" id="g2blank">?<span class="prop-unit">'+p.unitB+'</span></div></div>';
+    html += '</div>';
+    html += '<div class="tiles-row" id="g2Tiles"></div>';
+    area.innerHTML = html;
+
+    var tiles = shuffle(p.tiles);
+    var trayRow = $('g2Tiles');
+    tiles.forEach(function(num){
+      var tile = document.createElement('div');
+      tile.className = 'num-tile';
+      tile.textContent = num;
+      trayRow.appendChild(tile);
+      makeDraggable(tile, '#g2blank', function(dragEl, zone){
+        if(zone.classList.contains('locked-zone')) return false;
+        if(num === p.ans){
+          zone.classList.add('locked-zone');
+          zone.innerHTML = p.ans + '<span class="prop-unit">'+p.unitB+'</span>';
+          zone.classList.remove('blank');
+          dragEl.remove();
+          playCorrect();
+          addScore(15);
+          g2Correct++;
+          toast(t('¡Muy bien! +15','Great! +15'));
+          setTimeout(nextG2Step, 900);
+          return true;
+        } else {
+          dragEl.classList.add('wrong-shake');
+          playWrong();
+          toast(t('Casi... revisa la multiplicación cruzada','Almost... check the cross multiplication'));
+          setTimeout(function(){ dragEl.classList.remove('wrong-shake'); }, 400);
+          return false;
+        }
+      });
+    });
+  }
+
+  function nextG2Step(){
+    if(g2Index < g2Problems.length - 1){
+      g2Index++;
+      renderG2Problem();
+    } else {
+      confettiBurst();
+      playReward();
+      goTo('screen-feedback2');
+      buildFeedback2();
+    }
+  }
+
+  function buildFeedback2(){
+    var box = $('feedback2Box');
+    var pct = g2Correct / g2Problems.length;
+    var emoji = pct >= 0.99 ? '🧠' : '🌟';
+    var msgEs = pct >= 0.99 ? '¡Impresionante! Resolviste todos los problemas de regla de tres.' : '¡Buen trabajo aplicando las matemáticas a la naturaleza!';
+    var msgEn = pct >= 0.99 ? 'Amazing! You solved every rule-of-three problem.' : 'Great job applying math to nature!';
+    box.innerHTML =
+      '<div class="feedback-emoji">'+emoji+'</div>'+
+      '<h2 data-es="'+msgEs+'" data-en="'+msgEn+'">'+msgEs+'</h2>'+
+      '<div class="feedback-score" data-es="Problemas resueltos: '+g2Correct+' de '+g2Problems.length+'" data-en="Problems solved: '+g2Correct+' of '+g2Problems.length+'">Problemas resueltos</div>'+
+      '<div class="badge-earned">🥇 <span data-es="Insignia: Matemático de la Naturaleza" data-en="Badge: Nature Mathematician">Insignia: Matemático de la Naturaleza</span></div>';
+    badges.push({emoji:'🥇', es:'Matemático de la Naturaleza', en:'Nature Mathematician'});
+    applyLang();
+  }
+
+  function buildFinal(){
+    $('finalScore').textContent = score;
+    var wrap = $('finalBadges'); wrap.innerHTML = '';
+    badges.forEach(function(b){
+      var d = document.createElement('div');
+      d.className = 'badge-earned';
+      d.innerHTML = b.emoji + ' <span data-es="'+b.es+'" data-en="'+b.en+'">'+b.es+'</span>';
+      wrap.appendChild(d);
+    });
+    badges.push({emoji:'🌎', es:'Guardián de la Vida Terrestre', en:'Guardian of Life on Land'});
+    var d2 = document.createElement('div');
+    d2.className = 'badge-earned';
+    d2.innerHTML = '🌎 <span data-es="Guardián de la Vida Terrestre" data-en="Guardian of Life on Land">Guardián de la Vida Terrestre</span>';
+    wrap.appendChild(d2);
+    applyLang();
+    confettiBurst();
+  }
+
+  /* ============== RESET ============== */
+  function resetAll(){
+    score = 0; badges = []; diagAnswers = {};
+    $('scoreValue').textContent = 0;
+    goTo('screen-intro');
+  }
+
+  /* ============== WIRING ============== */
+  $('btnStart').addEventListener('click', function(){ playClick(); buildDiagnostic(); goTo('screen-diagnostic'); });
+  $('btnToGame1').addEventListener('click', function(){ playClick(); buildGame1(); goTo('screen-game1'); });
+  $('btnToFeedback1').addEventListener('click', function(){ playClick(); buildFeedback1(); goTo('screen-feedback1'); });
+  $('btnToConcept2').addEventListener('click', function(){ playClick(); goTo('screen-concept2'); });
+  $('btnToGame2').addEventListener('click', function(){ playClick(); buildGame2(); goTo('screen-game2'); });
+  $('btnToFinal').addEventListener('click', function(){ playClick(); buildFinal(); goTo('screen-final'); });
+  $('btnReplay').addEventListener('click', function(){ playClick(); resetAll(); });
+
+  $('muteBtn').addEventListener('click', function(){
+    soundOn = !soundOn;
+    $('muteBtn').textContent = soundOn ? '🔊' : '🔇';
+  });
+  $('langBtn').addEventListener('click', function(){
+    currentLang = currentLang === 'es' ? 'en' : 'es';
+    applyLang();
+    // rebuild dynamic screen currently active so drag labels also flip
+    var active = screens.filter(function(s){ return $(s).classList.contains('active'); })[0];
+    if(active === 'screen-concept1') buildConceptChain();
+  });
+
+  /* ============== INIT ============== */
+  buildProgress();
+  buildConceptChain();
+  applyLang();
+})();
+</script>
+</body>
+</html>
